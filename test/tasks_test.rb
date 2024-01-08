@@ -122,7 +122,7 @@ class TasksTest < ActiveSupport::TestCase
   private
 
   def new_connection(options = {})
-    configuration_options = { "database" => "mysql2rgeo_tasks_test" }.merge(options)
+    configuration_options = { "database" => "trilogy2rgeo_tasks_test" }.merge(options)
     configuration_hash = ActiveRecord::Base.test_connection_hash.merge(configuration_options)
     ActiveRecord::DatabaseConfigurations::HashConfig.new("default_env", "primary", configuration_hash)
   end

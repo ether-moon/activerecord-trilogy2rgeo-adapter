@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# The activerecord-mysql2rgeo-adapter gem installs the *mysql2rgeo*
+# The activerecord-trilogy2rgeo-adapter gem installs the *trilogy2rgeo*
 # connection adapter into ActiveRecord.
 
 # :stopdoc:
@@ -8,16 +8,16 @@
 require "rgeo/active_record"
 
 require "active_record/connection_adapters"
-require "active_record/connection_adapters/mysql2_adapter"
-require "active_record/connection_adapters/mysql2rgeo/version"
-require "active_record/connection_adapters/mysql2rgeo/column_methods"
-require "active_record/connection_adapters/mysql2rgeo/schema_creation"
-require "active_record/connection_adapters/mysql2rgeo/schema_statements"
-require "active_record/connection_adapters/mysql2rgeo/spatial_table_definition"
-require "active_record/connection_adapters/mysql2rgeo/spatial_column"
-require "active_record/connection_adapters/mysql2rgeo/spatial_column_info"
-require "active_record/connection_adapters/mysql2rgeo/spatial_expressions"
-require "active_record/connection_adapters/mysql2rgeo/arel_tosql"
+require "active_record/connection_adapters/trilogy_adapter"
+require "active_record/connection_adapters/trilogy2rgeo/version"
+require "active_record/connection_adapters/trilogy2rgeo/column_methods"
+require "active_record/connection_adapters/trilogy2rgeo/schema_creation"
+require "active_record/connection_adapters/trilogy2rgeo/schema_statements"
+require "active_record/connection_adapters/trilogy2rgeo/spatial_table_definition"
+require "active_record/connection_adapters/trilogy2rgeo/spatial_column"
+require "active_record/connection_adapters/trilogy2rgeo/spatial_column_info"
+require "active_record/connection_adapters/trilogy2rgeo/spatial_expressions"
+require "active_record/connection_adapters/trilogy2rgeo/arel_tosql"
 require "active_record/type/spatial"
 
 # :startdoc:
@@ -25,30 +25,33 @@ require "active_record/type/spatial"
 module ActiveRecord
   module ConnectionHandling # :nodoc:
     # Establishes a connection to the database that's used by all Active Record objects.
-    def mysql2rgeo_connection(config)
-      config = config.symbolize_keys
-      config[:flags] ||= 0
+    def trilogy2rgeo_connection(config)
+      configuration = config.dup
 
-      if config[:flags].kind_of? Array
-        config[:flags].push "FOUND_ROWS"
-      else
-        config[:flags] |= Mysql2::Client::FOUND_ROWS
-      end
+      # Set FOUND_ROWS capability on the connection so UPDATE queries returns number of rows
+      # matched rather than number of rows updated.
+      configuration[:found_rows] = true
 
-      ConnectionAdapters::Mysql2RgeoAdapter.new(
-        ConnectionAdapters::Mysql2RgeoAdapter.new_client(config),
-        logger,
-        nil,
-        config,
-      )
+      options = [
+        configuration[:host],
+        configuration[:port],
+        configuration[:database],
+        configuration[:username],
+        configuration[:password],
+        configuration[:socket],
+        0
+      ]
+
+      ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter.new nil, logger, options, configuration
     end
   end
 
   module ConnectionAdapters
-    class Mysql2RgeoAdapter < Mysql2Adapter
-      ADAPTER_NAME = "Mysql2Rgeo"
+    class Trilogy2RgeoAdapter < TrilogyAdapter
+      ADAPTER_NAME = "Trilogy2Rgeo"
+      AXIS_ORDER_LONG_LAT = "'axis-order=long-lat'".freeze
 
-      include Mysql2Rgeo::SchemaStatements
+      include Trilogy2Rgeo::SchemaStatements
 
       SPATIAL_COLUMN_OPTIONS =
         {
@@ -66,10 +69,25 @@ module ActiveRecord
       # http://postgis.17.x6.nabble.com/Default-SRID-td5001115.html
       DEFAULT_SRID = 0
 
+      %w[
+              geometry
+              geometrycollection
+              point
+              linestring
+              polygon
+              multipoint
+              multilinestring
+              multipolygon
+            ].each do |geo_type|
+        ActiveRecord::Type.register(geo_type.to_sym, adapter: :trilogy2rgeo) do |sql_type|
+          Type::Spatial.new(sql_type.to_s)
+        end
+      end
+
       def initialize(connection, logger, connection_options, config)
         super
 
-        @visitor = Arel::Visitors::Mysql2Rgeo.new(self)
+        @visitor = Arel::Visitors::Trilogy2Rgeo.new(self)
       end
 
       def self.spatial_column_options(key)
@@ -112,9 +130,7 @@ module ActiveRecord
               multilinestring
               multipolygon
             ].each do |geo_type|
-              m.register_type(geo_type) do |sql_type|
-                Type::Spatial.new(sql_type.to_s)
-              end
+              m.register_type(geo_type,Type.lookup(geo_type.to_sym, adapter: :trilogy2rgeo))
             end
           end
       end
@@ -132,6 +148,7 @@ module ActiveRecord
         dbval = value.try(:value_for_database) || value
         if RGeo::Feature::Geometry.check_type(dbval)
           "ST_GeomFromWKB(0x#{RGeo::WKRep::WKBGenerator.new(hex_format: true, little_endian: true).generate(dbval)},#{dbval.srid})"
+          # "ST_GeomFromWKB(0x#{RGeo::WKRep::WKBGenerator.new(hex_format: true, little_endian: true).generate(dbval)},#{dbval.srid}, #{AXIS_ORDER_LONG_LAT})"
         else
           super
         end

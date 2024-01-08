@@ -4,15 +4,15 @@ require "test_helper"
 
 class BasicTest < ActiveSupport::TestCase
   def test_version
-    refute_nil ActiveRecord::ConnectionAdapters::Mysql2Rgeo::VERSION
+    refute_nil ActiveRecord::ConnectionAdapters::Trilogy2Rgeo::VERSION
   end
 
-  def test_mysql2rgeo_available
-    assert_equal "Mysql2Rgeo", SpatialModel.connection.adapter_name
+  def test_trilogy2rgeo_available
+    assert_equal "Trilogy2Rgeo", SpatialModel.connection.adapter_name
   end
 
   def test_arel_visitor
-    visitor = Arel::Visitors::Mysql2Rgeo.new(SpatialModel.connection)
+    visitor = Arel::Visitors::Trilogy2Rgeo.new(SpatialModel.connection)
     node = RGeo::ActiveRecord::SpatialConstantNode.new("POINT (1.0 2.0)")
     collector = Arel::Collectors::PlainString.new
     visitor.accept(node, collector)

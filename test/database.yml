@@ -1,7 +1,7 @@
-adapter: mysql2rgeo
+adapter: trilogy2rgeo
 host: <%= ENV["MYSQL_HOST"] || "127.0.0.1" %>
 port: <%= ENV["MYSQL_PORT"] || "3306" %>
-database: <%= ENV["MYSQL_DATABASE"] || "mysql2rgeo_adapter_test" %>
+database: <%= ENV["MYSQL_DATABASE"] || "trilogy2rgeo_adapter_test" %>
 username: <%= ENV["MYSQL_USER"] || "root" %>
-password: <%= ENV["MYSQL_PASSWORD"] || "" %>
+password: <%= ENV["MYSQL_PASSWORD"] || "local" %>
 encoding: utf8mb4

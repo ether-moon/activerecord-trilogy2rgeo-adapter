@@ -21,7 +21,7 @@ Bundler/OrderedGems:
 # Include: **/*.gemspec
 Gemspec/OrderedDependencies:
   Exclude:
-    - 'activerecord-mysql2rgeo-adapter.gemspec'
+    - 'activerecord-trilogy2rgeo-adapter.gemspec'
 
 # Offense count: 21
 # Cop supports --auto-correct.
@@ -31,9 +31,9 @@ Gemspec/OrderedDependencies:
 # SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
 Layout/HashAlignment:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_statements.rb'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/spatial_column_info.rb'
-    - 'lib/active_record/connection_adapters/mysql2rgeo_adapter.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_statements.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/spatial_column_info.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo_adapter.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -41,14 +41,14 @@ Layout/HashAlignment:
 # SupportedStyles: normal, indented_internal_methods
 Layout/IndentationConsistency:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_creation.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_creation.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: Width, IgnoredPatterns.
 Layout/IndentationWidth:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_creation.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_creation.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
@@ -64,13 +64,13 @@ Layout/LineLength:
 Layout/TrailingEmptyLines:
   Exclude:
     - 'Gemfile'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_creation.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_creation.rb'
 
 # Offense count: 3
 # Configuration parameters: AllowSafeAssignment.
 Lint/AssignmentInCondition:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_creation.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_creation.rb'
 
 # Offense count: 1
 Lint/MissingSuper:
@@ -80,7 +80,7 @@ Lint/MissingSuper:
 # Offense count: 1
 Lint/UselessAssignment:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_statements.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_statements.rb'
 
 # Offense count: 24
 # Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
@@ -115,14 +115,14 @@ Metrics/PerceivedComplexity:
 # Offense count: 1
 Naming/AccessorMethodName:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/spatial_column.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/spatial_column.rb'
 
 # Offense count: 1
 # Configuration parameters: ExpectMatchingDefinition, CheckDefinitionPathHierarchy, Regex, IgnoreExecutableScripts, AllowedAcronyms.
 # AllowedAcronyms: CLI, DSL, ACL, API, ASCII, CPU, CSS, DNS, EOF, GUID, HTML, HTTP, HTTPS, ID, IP, JSON, LHS, QPS, RAM, RHS, RPC, SLA, SMTP, SQL, SSH, TCP, TLS, TTL, UDP, UI, UID, UUID, URI, URL, UTF8, VM, XML, XMPP, XSRF, XSS
 Naming/FileName:
   Exclude:
-    - 'lib/activerecord-mysql2rgeo-adapter.rb'
+    - 'lib/activerecord-trilogy2rgeo-adapter.rb'
 
 # Offense count: 2
 # Configuration parameters: IgnoredPatterns.
@@ -135,7 +135,7 @@ Naming/MethodName:
 # AllowedNames: at, by, db, id, in, io, ip, of, on, os, pp, to
 Naming/MethodParameterName:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_statements.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_statements.rb'
 
 # Offense count: 2
 # Configuration parameters: NamePrefix, ForbiddenPrefixes, AllowedMethods, MethodDefinitionMacros.
@@ -146,7 +146,7 @@ Naming/MethodParameterName:
 Naming/PredicateName:
   Exclude:
     - 'spec/**/*'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/spatial_column.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/spatial_column.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -161,46 +161,46 @@ Style/Documentation:
   Exclude:
     - 'spec/**/*'
     - 'test/**/*'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/column_methods.rb'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_statements.rb'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/spatial_expressions.rb'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/spatial_table_definition.rb'
-    - 'lib/active_record/connection_adapters/mysql2rgeo_adapter.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/column_methods.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_statements.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/spatial_expressions.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/spatial_table_definition.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo_adapter.rb'
 
 # Offense count: 2
 # Configuration parameters: MinBodyLength.
 Style/GuardClause:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/create_connection.rb'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/spatial_column.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/create_connection.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/spatial_column.rb'
 
 # Offense count: 5
 # Cop supports --auto-correct.
 Style/IfUnlessModifier:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/arel_tosql.rb'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_creation.rb'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/spatial_column.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/arel_tosql.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_creation.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/spatial_column.rb'
     - 'lib/active_record/type/spatial.rb'
 
 # Offense count: 1
 Style/MultilineBlockChain:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_statements.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_statements.rb'
 
 # Offense count: 1
 # Configuration parameters: AllowedMethods.
 # AllowedMethods: respond_to_missing?
 Style/OptionalBooleanParameter:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/spatial_column.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/spatial_column.rb'
 
 # Offense count: 4
 # Cop supports --auto-correct.
 Style/ParallelAssignment:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/arel_tosql.rb'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_statements.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/arel_tosql.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_statements.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -213,15 +213,15 @@ Style/PercentLiteralDelimiters:
 # Cop supports --auto-correct.
 Style/RedundantFileExtensionInRequire:
   Exclude:
-    - 'activerecord-mysql2rgeo-adapter.gemspec'
+    - 'activerecord-trilogy2rgeo-adapter.gemspec'
 
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: AllowModifier.
 Style/SoleNestedConditional:
   Exclude:
-    - 'lib/active_record/connection_adapters/mysql2rgeo/schema_creation.rb'
-    - 'lib/active_record/connection_adapters/mysql2rgeo/spatial_column.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/schema_creation.rb'
+    - 'lib/active_record/connection_adapters/trilogy2rgeo/spatial_column.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.

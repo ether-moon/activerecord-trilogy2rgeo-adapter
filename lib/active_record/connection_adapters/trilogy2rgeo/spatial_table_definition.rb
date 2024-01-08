@@ -2,12 +2,12 @@
 
 module ActiveRecord # :nodoc:
   module ConnectionAdapters # :nodoc:
-    module Mysql2Rgeo # :nodoc:
+    module Trilogy2Rgeo # :nodoc:
       class TableDefinition < MySQL::TableDefinition # :nodoc:
         include ColumnMethods
         # super: https://github.com/rails/rails/blob/master/activerecord/lib/active_record/connection_adapters/abstract/schema_definitions.rb
         def new_column_definition(name, type, **options)
-          if (info = Mysql2RgeoAdapter.spatial_column_options(type.to_sym))
+          if (info = Trilogy2RgeoAdapter.spatial_column_options(type.to_sym))
             if (limit = options.delete(:limit)) && limit.is_a?(::Hash)
               options.merge!(limit)
             end
@@ -31,7 +31,7 @@ module ActiveRecord # :nodoc:
           end
 
           def default_srid(options)
-            options[:geographic] ? 4326 : Mysql2RgeoAdapter::DEFAULT_SRID
+            options[:geographic] ? 4326 : Trilogy2RgeoAdapter::DEFAULT_SRID
           end
         end
       end

@@ -2,7 +2,7 @@
 
 module ActiveRecord
   module ConnectionAdapters
-    module Mysql2Rgeo
+    module Trilogy2Rgeo
       module SchemaStatements
         # super: https://github.com/rails/rails/blob/master/activerecord/lib/active_record/connection_adapters/mysql/schema_statements.rb
 
@@ -30,12 +30,12 @@ module ActiveRecord
 
         # override
         def schema_creation
-          Mysql2Rgeo::SchemaCreation.new(self)
+          Trilogy2Rgeo::SchemaCreation.new(self)
         end
 
         # override
         def create_table_definition(*args, **options)
-          Mysql2Rgeo::TableDefinition.new(self, *args, **options)
+          Trilogy2Rgeo::TableDefinition.new(self, *args, **options)
         end
 
         # override

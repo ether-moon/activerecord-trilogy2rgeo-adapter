@@ -1,11 +1,11 @@
-# Mysql2Rgeo ActiveRecord Adapter
+# Trilogy2Rgeo ActiveRecord Adapter
 
-[![Gem Version](https://badge.fury.io/rb/activerecord-mysql2rgeo-adapter.svg)](https://badge.fury.io/rb/activerecord-mysql2rgeo-adapter)
-![Test status](https://github.com/stadia/activerecord-mysql2rgeo-adapter/actions/workflows/tests.yml/badge.svg?branch=main)
-![Codeql](https://github.com/stadia/activerecord-mysql2rgeo-adapter/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)
-[![Code Climate](https://codeclimate.com/github/stadia/activerecord-mysql2rgeo-adapter.png)](https://codeclimate.com/github/stadia/activerecord-mysql2rgeo-adapter)
+[![Gem Version](https://badge.fury.io/rb/activerecord-trilogy2rgeo-adapter.svg)](https://badge.fury.io/rb/activerecord-trilogy2rgeo-adapter)
+![Test status](https://github.com/ether-moon/activerecord-trilogy2rgeo-adapter/actions/workflows/tests.yml/badge.svg?branch=main)
+![Codeql](https://github.com/ether-moon/activerecord-trilogy2rgeo-adapter/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)
+[![Code Climate](https://codeclimate.com/github/ether-moon/activerecord-trilogy2rgeo-adapter.png)](https://codeclimate.com/github/ether-moon/activerecord-trilogy2rgeo-adapter)
 
-The activerecord-mysql2rgeo-adapter provides access to features
+The activerecord-trilogy2rgeo-adapter provides access to features
 of the MySQL geospatial database from ActiveRecord. It uses the
 [RGeo](http://github.com/rgeo/rgeo) library to represent spatial data in Ruby.
 
@@ -33,13 +33,13 @@ The adapter requires Mysql 5.6+.
 Gemfile:
 
 ```ruby
-gem 'activerecord-mysql2rgeo-adapter'
+gem 'activerecord-trilogy2rgeo-adapter'
 ```
 
 Gemfile for JRuby:
 
 ```ruby
-gem 'activerecord-mysql2rgeo-adapter'
+gem 'activerecord-trilogy2rgeo-adapter'
 gem 'jdbc-mysql', platform: :jruby
 gem 'activerecord-jdbc-adapter', platform: :jruby
 gem 'ffi-geos'
@@ -89,14 +89,14 @@ PostGIS 2.0+
 
 ##### database.yml
 
-You must modify your `config/database.yml` file to use the mysql2rgeo
+You must modify your `config/database.yml` file to use the trilogy2rgeo
 adapter. At minimum, you will need to change the `adapter` field from
-`mysql2` to `mysql2rgeo`. Recommended configuration:
+`mysql2` to `trilogy2rgeo`. Recommended configuration:
 
 ```
 development:
   username:           your_username
-  adapter:            mysql2rgeo
+  adapter:            trilogy2rgeo
   host:               localhost
 ```
 
@@ -104,7 +104,7 @@ Here are some other options that are supported:
 
 ```
 development:
-  adapter: mysql2rgeo
+  adapter: trilogy2rgeo
   encoding: unicode
   pool: 5
   database: my_app_development    # your database name
@@ -124,7 +124,7 @@ to add geospatial capabilities to an existing Rails application (i.e. you need
 to convert a non-spatial database to a spatial database), see the section on
 "Upgrading a Database With Spatial Features" below.
 
-To create a new Rails application using `activerecord-mysql2rgeo-adapter`, start by
+To create a new Rails application using `activerecord-trilogy2rgeo-adapter`, start by
 using the mysql2 adapter.
 
 ```sh
@@ -134,7 +134,7 @@ rails new my_app --database=mysql
 Add the adapter gem to the Gemfile:
 
 ```ruby
-gem 'activerecord-mysql2rgeo-adapter'
+gem 'activerecord-trilogy2rgeo-adapter'
 ```
 
 Once you have set up your database config, run:
@@ -152,10 +152,10 @@ Once you have installed the adapter, edit your `config/database.yml` as describe
 If you have an existing Rails app that uses Mysql,
 and you want to add geospatial features, follow these steps.
 
-First, add the `activerecord-mysql2rgeo-adapter` gem to the Gemfile, and update
+First, add the `activerecord-trilogy2rgeo-adapter` gem to the Gemfile, and update
 your bundle by running `bundle install`.
 
-Next, modify your `config/database.yml` file to invoke the mysql2rgeo adapter, as
+Next, modify your `config/database.yml` file to invoke the trilogy2rgeo adapter, as
 described above.
 
 ### Creating Spatial Tables
@@ -166,7 +166,7 @@ different kinds of collections. These types are defined in a standard produced
 by the Open Geospatial Consortium. You can specify options indicating the coordinate
 system and number of coordinates for the values you are storing.
 
-The activerecord-mysql2rgeo-adapter extends ActiveRecord's migration syntax to
+The activerecord-trilogy2rgeo-adapter extends ActiveRecord's migration syntax to
 support these spatial types. The following example creates five spatial
 columns in a table:
 
@@ -202,7 +202,7 @@ that also includes a third "z" coordinate that can be used to store height
 information.
 
 The following are the data types understood by PostGIS and exposed by
-activerecord-mysql2rgeo-adapter:
+activerecord-trilogy2rgeo-adapter:
 
 * `:geometry` -- Any geometric type
 * `:point` -- Point data
@@ -234,7 +234,7 @@ Prior to version 3, the `point` and `polygon` types were supported.
 ActiveRecord's usefulness stems from the way it automatically configures
 classes based on the database structure and schema. If a column in the
 database has an integer type, ActiveRecord automatically casts the data to a
-Ruby Integer. In the same way, the activerecord-mysql2rgeo-adapter automatically
+Ruby Integer. In the same way, the activerecord-trilogy2rgeo-adapter automatically
 casts spatial data to a corresponding RGeo data type.
 
 RGeo offers more flexibility in its type system than can be
@@ -305,7 +305,7 @@ factory = p.factory                # returns a spherical factory
 
 You can set a spatial attribute by providing an RGeo geometry object, or by
 providing the WKT string representation of the geometry. If a string is
-provided, the activerecord-mysql2rgeo-adapter will attempt to parse it as WKT and
+provided, the activerecord-trilogy2rgeo-adapter will attempt to parse it as WKT and
 set the value accordingly.
 
 ```ruby
@@ -320,7 +320,7 @@ record.lonlat = 'POINT(x)'         # sets the value to nil
 ```
 
 If you set the value to an RGeo object, the factory needs to match the factory
-for the attribute. If the factories do not match, activerecord-mysql2rgeo-adapter
+for the attribute. If the factories do not match, activerecord-trilogy2rgeo-adapter
 will attempt to cast the value to the correct factory.
 
 ```ruby
@@ -360,7 +360,7 @@ functions provided by PostGIS.
 
 Contributions are welcome. See CONTRIBUTING.md for instructions.
 
-Report issues at http://github.com/stadia/activerecord-mysql2rgeo-adapter/issues
+Report issues at http://github.com/ether-moon/activerecord-trilogy2rgeo-adapter/issues
 
 Support is also available on the rgeo-users google group at http://groups.google.com/group/rgeo-users
 
@@ -368,4 +368,4 @@ Support is also available on the rgeo-users google group at http://groups.google
 
 Copyright Yongdae Hwang
 
-https://github.com/stadia/activerecord-mysql2rgeo-adapter/blob/main/LICENSE.txt
+https://github.com/ether-moon/activerecord-trilogy2rgeo-adapter/blob/main/LICENSE.txt

@@ -2,7 +2,7 @@
 
 module ActiveRecord
   module Type
-    class Spatial < Value # :nodoc:
+    class Spatial < Binary # :nodoc:
       # sql_type is a string that comes from the database definition
       # examples:
       #   "geometry"
@@ -94,7 +94,7 @@ module ActiveRecord
           @srid = [@srid].pack("V").unpack("N").first if string[9, 1] == "1"
           RGeo::WKRep::WKBParser.new(spatial_factory, support_ewkb: true, default_srid: srid).parse(string[8..-1])
         else
-          string, @srid = Arel::Visitors::Mysql2Rgeo.parse_node(string)
+          string, @srid = Arel::Visitors::Trilogy2Rgeo.parse_node(string)
           RGeo::WKRep::WKTParser.new(spatial_factory, support_ewkt: true, default_srid: @srid).parse(string)
         end
       rescue RGeo::Error::ParseError, RGeo::Error::InvalidGeometry

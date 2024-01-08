@@ -2,16 +2,16 @@
 
 Fork the repo:
 
-`git clone git@github.com:stadia/activerecord-mysql2rgeo-adapter.git`
+`git clone git@github.com:ether-moon/activerecord-trilogy2rgeo-adapter.git`
 
 Set up your test database:
 
 ```sh
 mysql --user root
-grant all on mysql2rgeo_adapter_test.* to mysql2rgeo_adapter_test@localhost identified by 'mysql2rgeo_adapter_test';
-grant all on mysql2rgeo_tasks_test.* to mysql2rgeo_adapter_test@localhost identified by 'mysql2rgeo_adapter_test';
-create database mysql2rgeo_adapter_test;
-create database mysql2rgeo_tasks_test;
+grant all on trilogy2rgeo_adapter_test.* to trilogy2rgeo_adapter_test@localhost identified by 'trilogy2rgeo_adapter_test';
+grant all on trilogy2rgeo_tasks_test.* to trilogy2rgeo_adapter_test@localhost identified by 'trilogy2rgeo_adapter_test';
+create database trilogy2rgeo_adapter_test;
+create database trilogy2rgeo_tasks_test;
 ```
 
 You may also set up environment variables to define the database connection.
@@ -21,9 +21,9 @@ For example:
 ```sh
 export MYSQL_HOST=localhost
 export MYSQL_PORT=3306
-export MYSQL_DATABASE=mysql2rgeo_adapter_test
-export MYSQL_USER=mysql2rgeo_adapter_test
-export MYSQL_PASSWORD=mysql2rgeo_adapter_test
+export MYSQL_DATABASE=trilogy2rgeo_adapter_test
+export MYSQL_USER=trilogy2rgeo_adapter_test
+export MYSQL_PASSWORD=trilogy2rgeo_adapter_test
 ```
 
 Install dependencies:

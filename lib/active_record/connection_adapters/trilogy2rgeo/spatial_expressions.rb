@@ -2,7 +2,7 @@
 
 module RGeo
   module ActiveRecord
-    module Mysql2Rgeo
+    module Trilogy2Rgeo
       module SpatialExpressions
         def st_distance_sphere(rhs, units = nil)
           args = [self, rhs]
@@ -15,6 +15,6 @@ module RGeo
 end
 
 # Allow chaining of spatial expressions from attributes
-Arel::Attribute.include RGeo::ActiveRecord::Mysql2Rgeo::SpatialExpressions
-RGeo::ActiveRecord::SpatialConstantNode.include RGeo::ActiveRecord::Mysql2Rgeo::SpatialExpressions
-RGeo::ActiveRecord::SpatialNamedFunction.include RGeo::ActiveRecord::Mysql2Rgeo::SpatialExpressions
+Arel::Attribute.include RGeo::ActiveRecord::Trilogy2Rgeo::SpatialExpressions
+RGeo::ActiveRecord::SpatialConstantNode.include RGeo::ActiveRecord::Trilogy2Rgeo::SpatialExpressions
+RGeo::ActiveRecord::SpatialNamedFunction.include RGeo::ActiveRecord::Trilogy2Rgeo::SpatialExpressions

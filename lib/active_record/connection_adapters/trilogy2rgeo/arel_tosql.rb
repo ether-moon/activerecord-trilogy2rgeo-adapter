@@ -2,14 +2,8 @@
 
 module Arel # :nodoc:
   module Visitors # :nodoc:
-    # Different super-class under JRuby JDBC adapter.
-    MySQLSuperclass = if defined?(::ArJdbc::MySQL::BindSubstitution)
-                        ::ArJdbc::MySQL::BindSubstitution
-                      else
-                        MySQL
-                      end
+    class Trilogy2Rgeo < MySQL # :nodoc:
 
-    class Mysql2Rgeo < MySQLSuperclass  # :nodoc:
       include RGeo::ActiveRecord::SpatialToSql
 
       if ::Arel::Visitors.const_defined?(:BindVisitor)
@@ -27,12 +21,8 @@ module Arel # :nodoc:
       end
 
       def visit_String(node, collector)
-        node, srid = Mysql2Rgeo.parse_node(node)
-        collector << if srid == 0
-                       "#{st_func('ST_WKTToSQL')}(#{quote(node)})"
-                     else
-                       "#{st_func('ST_WKTToSQL')}(#{quote(node)}, #{srid})"
-                     end
+        node, srid = Trilogy2Rgeo.parse_node(node)
+        collector << wkttosql_statement(node, srid)
       end
 
       def visit_RGeo_ActiveRecord_SpatialNamedFunction(node, collector)
@@ -42,12 +32,8 @@ module Arel # :nodoc:
       def visit_in_spatial_context(node, collector)
         case node
         when String
-          node, srid = Mysql2Rgeo.parse_node(node)
-          collector << if srid == 0
-                         "#{st_func('ST_WKTToSQL')}(#{quote(node)})"
-                       else
-                         "#{st_func('ST_WKTToSQL')}(#{quote(node)}, #{srid})"
-                       end
+          node, srid = Trilogy2Rgeo.parse_node(node)
+          collector << wkttosql_statement(node, srid)
         when RGeo::Feature::Instance
           collector << visit_RGeo_Feature_Instance(node, collector)
         when RGeo::Cartesian::BoundingBox
@@ -75,6 +61,18 @@ module Arel # :nodoc:
           value = node
         end
         [value, srid]
+      end
+
+      private
+
+      def wkttosql_statement(node, srid)
+        func_name = st_func("ST_WKTToSQL")
+
+        args = [quote(node)]
+        args << srid unless srid.zero?
+        # args << ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter::AXIS_ORDER_LONG_LAT
+
+        "#{func_name}(#{args.join(', ')})"
       end
     end
   end

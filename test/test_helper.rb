@@ -3,7 +3,7 @@
 require "minitest/autorun"
 require "minitest/pride"
 require "mocha/minitest"
-require "activerecord-mysql2rgeo-adapter"
+require "activerecord-trilogy2rgeo-adapter"
 require "erb"
 
 require "byebug" if ENV["BYEBUG"]

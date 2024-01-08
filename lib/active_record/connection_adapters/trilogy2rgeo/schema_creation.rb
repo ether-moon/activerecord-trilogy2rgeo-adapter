@@ -2,7 +2,7 @@
 
 module ActiveRecord
   module ConnectionAdapters
-    module Mysql2Rgeo
+    module Trilogy2Rgeo
       class SchemaCreation < MySQL::SchemaCreation # :nodoc:
         private
 

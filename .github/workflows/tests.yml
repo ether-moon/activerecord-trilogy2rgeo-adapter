@@ -10,7 +10,7 @@ jobs:
         ports:
           - 3306:3306
         env:
-          MYSQL_DATABASE: mysql2rgeo_adapter_test
+          MYSQL_DATABASE: trilogy2rgeo_adapter_test
           MYSQL_USER: user
           MYSQL_PASSWORD: password
           MYSQL_ROOT_PASSWORD: password
@@ -19,11 +19,10 @@ jobs:
       BUNDLE_GEMFILE: ${{matrix.gemfile}}
     strategy:
       matrix:
-        ruby: ['3.0', '2.7']
+        ruby: ['3.1', '3.0', '2.7']
         gemfile:
           - gemfiles/ar70.gemfile
-#        mysql: ['5.7', '8.0']
-        mysql: ['5.7']
+        mysql: ['8.0']
     steps:
       - name: Set Up Actions
         uses: actions/checkout@v2
@@ -38,8 +37,8 @@ jobs:
         run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
       - name: Create Database
         run: |
-          mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE IF NOT EXISTS mysql2rgeo_adapter_test;'
-          mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE IF NOT EXISTS mysql2rgeo_tasks_test;'
+          mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE IF NOT EXISTS trilogy2rgeo_adapter_test;'
+          mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE IF NOT EXISTS trilogy2rgeo_tasks_test;'
       - name: Run Tests
         run: bundle exec rake test
         env:

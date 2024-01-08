@@ -2,7 +2,7 @@
 
 module ActiveRecord
   module ConnectionAdapters
-    module Mysql2Rgeo
+    module Trilogy2Rgeo
       VERSION = "7.0.0"
     end
   end

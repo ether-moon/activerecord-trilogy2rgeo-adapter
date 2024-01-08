@@ -2,7 +2,7 @@
 
 module ActiveRecord # :nodoc:
   module ConnectionAdapters # :nodoc:
-    module Mysql2Rgeo # :nodoc:
+    module Trilogy2Rgeo # :nodoc:
       # Do spatial sql queries for column info and memoize that info.
       class SpatialColumnInfo
         def initialize(adapter, table_name)
@@ -37,7 +37,7 @@ module ActiveRecord # :nodoc:
 
         # do not query the database for non-spatial columns/tables
         def get(column_name, type)
-          return unless Mysql2RgeoAdapter.spatial_column_options(type.to_sym)
+          return unless Trilogy2RgeoAdapter.spatial_column_options(type.to_sym)
 
           @spatial_column_info ||= all
           @spatial_column_info[column_name]
