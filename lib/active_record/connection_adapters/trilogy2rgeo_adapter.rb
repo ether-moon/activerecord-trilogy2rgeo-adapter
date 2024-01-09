@@ -68,6 +68,7 @@ module ActiveRecord
 
       # http://postgis.17.x6.nabble.com/Default-SRID-td5001115.html
       DEFAULT_SRID = 0
+      GEOGRAPHIC_SRID = 4326
 
       %w[
               geometry
@@ -147,8 +148,7 @@ module ActiveRecord
       def quote(value)
         dbval = value.try(:value_for_database) || value
         if RGeo::Feature::Geometry.check_type(dbval)
-          "ST_GeomFromWKB(0x#{RGeo::WKRep::WKBGenerator.new(hex_format: true, little_endian: true).generate(dbval)},#{dbval.srid})"
-          # "ST_GeomFromWKB(0x#{RGeo::WKRep::WKBGenerator.new(hex_format: true, little_endian: true).generate(dbval)},#{dbval.srid}, #{AXIS_ORDER_LONG_LAT})"
+          "ST_GeomFromWKB(0x#{RGeo::WKRep::WKBGenerator.new(hex_format: true, little_endian: true).generate(dbval)},#{dbval.srid}, #{AXIS_ORDER_LONG_LAT})"
         else
           super
         end

@@ -29,10 +29,6 @@ module ActiveRecord # :nodoc:
           def geo_type(type = "GEOMETRY")
             type.to_s.delete("_").upcase
           end
-
-          def default_srid(options)
-            options[:geographic] ? 4326 : Trilogy2RgeoAdapter::DEFAULT_SRID
-          end
         end
       end
     end

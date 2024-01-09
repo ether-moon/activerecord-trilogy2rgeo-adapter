@@ -70,7 +70,7 @@ module Arel # :nodoc:
 
         args = [quote(node)]
         args << srid unless srid.zero?
-        # args << ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter::AXIS_ORDER_LONG_LAT
+        args << ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter::AXIS_ORDER_LONG_LAT
 
         "#{func_name}(#{args.join(', ')})"
       end

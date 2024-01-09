@@ -16,7 +16,8 @@ class BasicTest < ActiveSupport::TestCase
     node = RGeo::ActiveRecord::SpatialConstantNode.new("POINT (1.0 2.0)")
     collector = Arel::Collectors::PlainString.new
     visitor.accept(node, collector)
-    assert_equal "ST_GeomFromText('POINT (1.0 2.0)')", collector.value
+    axis_order = ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter::AXIS_ORDER_LONG_LAT
+    assert_equal "ST_GeomFromText('POINT (1.0 2.0)', #{axis_order})", collector.value
   end
 
   def test_set_and_get_point
@@ -46,7 +47,6 @@ class BasicTest < ActiveSupport::TestCase
     obj2 = SpatialModel.find(id)
     assert_equal factory.point(1.0, 2.0), obj2.latlon
     assert_equal 3857, obj2.latlon.srid
-    # assert_equal true, RGeo::Geos.is_geos?(obj2.latlon)
   end
 
   def test_save_and_load_geographic_point
@@ -56,9 +56,8 @@ class BasicTest < ActiveSupport::TestCase
     obj.save!
     id = obj.id
     obj2 = SpatialModel.find(id)
-    # assert_equal geographic_factory.point(1.0, 2.0), obj2.latlon_geo
+    assert_equal geographic_factory.point(1.0, 2.0), obj2.latlon_geo
     assert_equal 4326, obj2.latlon_geo.srid
-    # assert_equal false, RGeo::Geos.is_geos?(obj2.latlon_geo)
   end
 
   def test_save_and_load_point_from_wkt
@@ -111,7 +110,7 @@ class BasicTest < ActiveSupport::TestCase
     klass.connection.create_table(:spatial_models, force: true) do |t|
       t.column(:shape, :geometry)
       t.linestring(:path, srid: 3857)
-      t.point(:latlon, null: false, geographic: true)
+      t.point(:latlon, null: false, srid: 4326)
     end
     klass.reset_column_information
     assert_includes klass.columns.map(&:name), "shape"
@@ -124,7 +123,6 @@ class BasicTest < ActiveSupport::TestCase
     point = object.latlon
     # assert_equal 47, point.latitude
     object.shape = point
-    assert_equal true, RGeo::Geos.geos?(object.shape)
 
     spatial_factory_store.clear
   end
@@ -152,14 +150,13 @@ class BasicTest < ActiveSupport::TestCase
     SpatialModel.reset_column_information
     rec = SpatialModel.new
     wkt = "MULTIPOLYGON (((-73.97210545302842 40.782991711401195, " \
-          "-73.97228912063449 40.78274091498208, " \
-          "-73.97235226842568 40.78276752827304, " \
-          "-73.97216860098405 40.783018324791776, " \
-          "-73.97210545302842 40.782991711401195)))"
+      "-73.97228912063449 40.78274091498208, " \
+      "-73.97235226842568 40.78276752827304, " \
+      "-73.97216860098405 40.783018324791776, " \
+      "-73.97210545302842 40.782991711401195)))"
     rec.m_poly = wkt
     assert rec.save
     rec = SpatialModel.find(rec.id) # force reload
-    assert rec.m_poly.is_a?(RGeo::Geos::CAPIMultiPolygonImpl)
     assert_equal wkt, rec.m_poly.to_s
   end
 
@@ -168,7 +165,7 @@ class BasicTest < ActiveSupport::TestCase
   def create_model
     SpatialModel.connection.create_table(:spatial_models, force: true) do |t|
       t.column "latlon", :point, srid: 3857
-      t.column "latlon_geo", :point, srid: 4326, geographic: true
+      t.column "latlon_geo", :point, srid: 4326
     end
     SpatialModel.reset_column_information
   end

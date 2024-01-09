@@ -18,10 +18,8 @@ module ActiveRecord # :nodoc:
             build_from_sql_type(sql_type_metadata.sql_type)
           end
           super(name, default, sql_type_metadata, null, default_function, collation: collation, comment: comment)
-          if spatial?
-            if @srid
-              @limit = { type: geometric_type.type_name.underscore, srid: @srid }
-            end
+          if spatial? && @srid
+            @limit = {type: geometric_type.type_name.underscore, srid: @srid}
           end
         end
 
@@ -35,11 +33,6 @@ module ActiveRecord # :nodoc:
           false
         end
 
-        def geographic
-          false
-        end
-
-        alias geographic? geographic
         alias has_z? has_z
         alias has_m? has_m
 
@@ -52,7 +45,7 @@ module ActiveRecord # :nodoc:
         end
 
         def spatial?
-          %i[geometry geography].include?(@sql_type_metadata.type)
+          %i[geometry].include?(@sql_type_metadata.type)
         end
 
         private

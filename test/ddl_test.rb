@@ -31,20 +31,18 @@ class DDLTest < ActiveSupport::TestCase
     col = klass.columns.last
     assert_equal RGeo::Feature::Geometry, col.geometric_type
     assert_equal true, col.spatial?
-    assert_equal false, col.geographic?
     assert_equal 0, col.srid
     klass.connection.drop_table(:spatial_models)
   end
 
   def test_create_simple_geography
     klass.connection.create_table(:spatial_models, force: true) do |t|
-      t.column "latlon", :geometry, geographic: true
+      t.column "latlon", :geometry, srid: 4326
     end
     klass.reset_column_information
     col = klass.columns.last
     assert_equal RGeo::Feature::Geometry, col.geometric_type
     assert_equal true, col.spatial?
-    assert_equal false, col.geographic?
     assert_equal 0, col.srid
   end
 
@@ -80,8 +78,7 @@ class DDLTest < ActiveSupport::TestCase
     assert_equal 0, columns[-3].srid
     assert_equal true, columns[-3].spatial?
     assert_equal RGeo::Feature::Point, columns[-2].geometric_type
-    klass.connection.supports_index_sort_order? ? assert_equal(4326, columns[-2].srid) : assert_equal(0, columns[-2].srid)
-    assert_equal false, columns[-2].geographic?
+    assert_equal(4326, columns[-2].srid)
     assert_equal true, columns[-2].spatial?
     assert_nil columns[-1].geometric_type
     assert_equal false, columns[-1].spatial?
@@ -105,8 +102,8 @@ class DDLTest < ActiveSupport::TestCase
       t.column("latlon", :geometry)
     end
     klass.connection.change_table(:spatial_models) do |t|
-      t.point("geom3", srid: 4326, geographic: true)
-      t.column("geom2", :point, srid: 4326, geographic: true)
+      t.point("geom3", srid: 4326)
+      t.column("geom2", :point, srid: 4326)
       t.column("name", :string)
     end
     klass.reset_column_information
@@ -117,13 +114,11 @@ class DDLTest < ActiveSupport::TestCase
     assert_equal true, cols[-4].spatial?
     # geom3
     assert_equal RGeo::Feature::Point, cols[-3].geometric_type
-    klass.connection.supports_index_sort_order? ? assert_equal(4326, cols[-3].srid) : assert_equal(0, cols[-3].srid)
-    assert_equal false, cols[-3].geographic?
+    assert_equal(4326, cols[-3].srid)
     assert_equal true, cols[-3].spatial?
     # geom2
     assert_equal RGeo::Feature::Point, cols[-2].geometric_type
-    klass.connection.supports_index_sort_order? ? assert_equal(4326, cols[-2].srid) : assert_equal(0, cols[-2].srid)
-    assert_equal false, cols[-2].geographic?
+    assert_equal(4326, cols[-2].srid)
     assert_equal true, cols[-2].spatial?
     # name
     assert_nil cols[-1].geometric_type
@@ -143,13 +138,12 @@ class DDLTest < ActiveSupport::TestCase
     assert_equal RGeo::Feature::Geometry, cols[-1].geometric_type
     assert_equal "latlon", cols[-1].name
     assert_equal 0, cols[-1].srid
-    assert_equal false, cols[-1].geographic?
   end
 
   def test_drop_geography_column
     klass.connection.create_table(:spatial_models, force: true) do |t|
       t.column("latlon", :geometry)
-      t.column("geom2", :point, srid: 4326, geographic: true)
+      t.column("geom2", :point, srid: 4326)
       t.column("geom3", :point, srid: 4326)
     end
     klass.connection.change_table(:spatial_models) do |t|
@@ -159,10 +153,8 @@ class DDLTest < ActiveSupport::TestCase
     columns = klass.columns
     assert_equal RGeo::Feature::Point, columns[-1].geometric_type
     assert_equal "geom3", columns[-1].name
-    assert_equal false, columns[-1].geographic?
     assert_equal RGeo::Feature::Geometry, columns[-2].geometric_type
     assert_equal "latlon", columns[-2].name
-    assert_equal false, columns[-2].geographic?
   end
 
   def test_create_simple_geometry_using_shortcut
@@ -172,19 +164,17 @@ class DDLTest < ActiveSupport::TestCase
     klass.reset_column_information
     col = klass.columns.last
     assert_equal RGeo::Feature::Geometry, col.geometric_type
-    assert_equal false, col.geographic?
     assert_equal 0, col.srid
     klass.connection.drop_table(:spatial_models)
   end
 
   def test_create_simple_geography_using_shortcut
     klass.connection.create_table(:spatial_models, force: true) do |t|
-      t.geometry "latlon", geographic: true
+      t.geometry "latlon", srid: 4326
     end
     klass.reset_column_information
     col = klass.columns.last
     assert_equal RGeo::Feature::Geometry, col.geometric_type
-    assert_equal false, col.geographic?
     assert_equal 0, col.srid
   end
 
@@ -203,11 +193,7 @@ class DDLTest < ActiveSupport::TestCase
     klass.reset_column_information
     col = klass.columns.last
     assert_equal RGeo::Feature::Geometry, col.geometric_type
-    if klass.connection.supports_index_sort_order?
-      assert_equal({ srid: 4326, type: "geometry" }, col.limit)
-    else
-      assert_equal({ srid: 0, type: "geometry" }, col.limit)
-    end
+    assert_equal({srid: 0, type: "geometry"}, col.limit)
   end
 
   def test_create_polygon_with_options
@@ -217,15 +203,10 @@ class DDLTest < ActiveSupport::TestCase
     klass.reset_column_information
     col = klass.columns.last
     assert_equal RGeo::Feature::Polygon, col.geometric_type
-    assert_equal false, col.geographic?
     assert_equal false, col.has_z?
     assert_equal false, col.has_m?
-    klass.connection.supports_index_sort_order? ? assert_equal(3857, col.srid) : assert_equal(0, col.srid)
-    if klass.connection.supports_index_sort_order?
-      assert_equal({ type: "polygon", srid: 3857 }, col.limit)
-    else
-      assert_equal({ type: "polygon", srid: 0 }, col.limit)
-    end
+    assert_equal(3857, col.srid)
+    assert_equal({type: "polygon", srid: 3857}, col.limit)
     klass.connection.drop_table(:spatial_models)
   end
 
@@ -275,11 +256,11 @@ class DDLTest < ActiveSupport::TestCase
 
   def test_reload_dumped_schema
     klass.connection.create_table(:spatial_models, force: true) do |t|
-      t.geometry "latlon1", limit: { srid: 4326, type: "point", geographic: true }
+      t.geometry "latlon1", limit: {srid: 4326, type: "point"}
     end
     klass.reset_column_information
     col = klass.columns.last
-    klass.connection.supports_index_sort_order? ? assert_equal(4326, col.srid) : assert_equal(0, col.srid)
+    assert_equal(4326, col.srid)
   end
 
   def test_non_spatial_column_limits

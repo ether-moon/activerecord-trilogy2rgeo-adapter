@@ -11,15 +11,9 @@ module ActiveRecord # :nodoc:
         end
 
         def all
-          info = if @adapter.supports_expression_index?
-                   @adapter.query(
-                     "SELECT column_name, srs_id, column_type FROM INFORMATION_SCHEMA.Columns WHERE table_name='#{@table_name}'"
-                   )
-                 else
-                   @adapter.query(
-                     "SELECT column_name, 0, column_type FROM INFORMATION_SCHEMA.Columns WHERE table_name='#{@table_name}'"
-                   )
-                 end
+          info = @adapter.query(
+            "SELECT column_name, srs_id, column_type FROM INFORMATION_SCHEMA.Columns WHERE table_name='#{@table_name}'"
+          )
 
           result = {}
           info.each do |row|
@@ -27,9 +21,9 @@ module ActiveRecord # :nodoc:
             type = row[2]
             type.sub!(/m$/, "")
             result[name] = {
-              name:      name,
-              srid:      row[1].to_i,
-              type:      type,
+              name: name,
+              srid: row[1].to_i,
+              type: type,
             }
           end
           result

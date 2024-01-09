@@ -13,7 +13,7 @@ class TasksTest < ActiveSupport::TestCase
   # def test_sql_dump
   #   setup_database_tasks
   #   connection.create_table(:spatial_test, force: true) do |t|
-  #     t.point "latlon", geographic: true
+  #     t.point "latlon", srid: 4326
   #     t.geometry "geo_col", srid: 4326
   #     t.column "poly", :multi_polygon, srid: 4326
   #   end
@@ -27,7 +27,7 @@ class TasksTest < ActiveSupport::TestCase
   # def test_index_sql_dump
   #   setup_database_tasks
   #   connection.create_table(:spatial_test, force: true) do |t|
-  #     t.point "latlon", null: false, geographic: true
+  #     t.point "latlon", null: false, srid: 4326
   #     t.string "name"
   #   end
   #   connection.add_index :spatial_test, :latlon, type: :spatial
@@ -65,27 +65,21 @@ class TasksTest < ActiveSupport::TestCase
   def test_basic_geography_schema_dump
     setup_database_tasks
     connection.create_table(:spatial_test, force: true) do |t|
-      t.point "latlon1", geographic: true
-      t.spatial "latlon2", srid: 4326, type: "point", geographic: true
+      t.point "latlon1", srid: 4326
+      t.spatial "latlon2", srid: 4326, type: "point"
     end
     File.open(tmp_sql_filename, "w:utf-8") do |file|
       ActiveRecord::SchemaDumper.dump(connection, file)
     end
     data = File.read(tmp_sql_filename)
-    assert_includes data, %(t.geometry "latlon1", limit: {:type=>"point", :srid=>0})
-    if connection.supports_index_sort_order?
-      assert_includes(data,
-                      %(t.geometry "latlon2", limit: {:type=>"point", :srid=>4326}))
-    else
-      assert_includes(data,
-                      %(t.geometry "latlon2", limit: {:type=>"point", :srid=>0}))
-    end
+    assert_includes data, %(t.geometry "latlon1", limit: {:type=>"point", :srid=>4326})
+    assert_includes data, %(t.geometry "latlon2", limit: {:type=>"point", :srid=>4326})
   end
 
   def test_index_schema_dump
     setup_database_tasks
     connection.create_table(:spatial_test, force: true) do |t|
-      t.point "latlon", null: false, geographic: true
+      t.point "latlon", null: false, srid: 4326
     end
     connection.add_index :spatial_test, :latlon, type: :spatial
     File.open(tmp_sql_filename, "w:utf-8") do |file|
@@ -93,7 +87,7 @@ class TasksTest < ActiveSupport::TestCase
     end
     data = File.read(tmp_sql_filename)
     puts data
-    assert_includes data, %(t.geometry "latlon", limit: {:type=>"point", :srid=>0}, null: false)
+    assert_includes data, %(t.geometry "latlon", limit: {:type=>"point", :srid=>4326}, null: false)
     assert_includes data, %(t.index ["latlon"], name: "index_spatial_test_on_latlon", type: :spatial)
   end
 
@@ -122,7 +116,7 @@ class TasksTest < ActiveSupport::TestCase
   private
 
   def new_connection(options = {})
-    configuration_options = { "database" => "trilogy2rgeo_tasks_test" }.merge(options)
+    configuration_options = {"database" => "trilogy2rgeo_tasks_test"}.merge(options)
     configuration_hash = ActiveRecord::Base.test_connection_hash.merge(configuration_options)
     ActiveRecord::DatabaseConfigurations::HashConfig.new("default_env", "primary", configuration_hash)
   end

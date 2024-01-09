@@ -6,7 +6,6 @@ module ActiveRecord
       # sql_type is a string that comes from the database definition
       # examples:
       #   "geometry"
-      #   "geography"
       #   "geometry NOT NULL"
       #   "geometry"
       def initialize(sql_type = "geometry")
@@ -17,11 +16,11 @@ module ActiveRecord
       # sql_type: geometry, geometry(Point), geometry(Point,4326), ...
       #
       # returns [geo_type, srid]
-      #   geo_type: geography, geometry, point, line_string, polygon, ...
+      #   geo_type: geometry, point, line_string, polygon, ...
       #   srid:     1234
       def self.parse_sql_type(sql_type)
-        geo_type, srid = nil, 0, false, false
-        if sql_type =~ /(geography|geometry)\((.*)\)$/i
+        geo_type, srid = nil, 0
+        if sql_type =~ /(geometry)\((.*)\)$/i
           # geometry(Point)
           # geometry(Point,4326)
           params = Regexp.last_match(2).split(",")
@@ -42,12 +41,15 @@ module ActiveRecord
       def spatial_factory
         @spatial_factories ||= {}
 
-        @spatial_factories[@srid] ||=
+        @spatial_factories[@srid] ||= if @srid == ConnectionAdapters::Trilogy2RgeoAdapter::GEOGRAPHIC_SRID
+          RGeo::Geographic.spherical_factory(srid: ConnectionAdapters::Trilogy2RgeoAdapter::GEOGRAPHIC_SRID)
+        else
           RGeo::ActiveRecord::SpatialFactoryStore.instance.factory(
             geo_type: @geo_type,
             sql_type: @sql_type,
             srid: @srid
           )
+        end
       end
 
       def klass
@@ -92,7 +94,7 @@ module ActiveRecord
         elsif string[0, 10] =~ /[0-9a-fA-F]{8}0[01]/
           @srid = string[0, 8].to_i(16)
           @srid = [@srid].pack("V").unpack("N").first if string[9, 1] == "1"
-          RGeo::WKRep::WKBParser.new(spatial_factory, support_ewkb: true, default_srid: srid).parse(string[8..-1])
+          RGeo::WKRep::WKBParser.new(spatial_factory, support_ewkb: true, default_srid: @srid).parse(string[8..-1])
         else
           string, @srid = Arel::Visitors::Trilogy2Rgeo.parse_node(string)
           RGeo::WKRep::WKTParser.new(spatial_factory, support_ewkt: true, default_srid: @srid).parse(string)
