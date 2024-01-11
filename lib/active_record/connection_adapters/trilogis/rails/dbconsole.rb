@@ -2,7 +2,7 @@
 
 module ActiveRecord
   module ConnectionAdapters
-    class Trilogy2RgeoAdapter
+    class TrilogisAdapter
       module Rails
         module DBConsole
           class AdapterAdapter < SimpleDelegator
@@ -12,7 +12,7 @@ module ActiveRecord
           end
 
           def db_config
-            if super.adapter == "trilogy2rgeo"
+            if super.adapter == "trilogis"
               AdapterAdapter.new(super)
             else
               super
@@ -33,9 +33,9 @@ module Rails
       def start
         ENV["RAILS_ENV"] ||= @options[:environment] || environment
 
-        if config["adapter"] == "trilogy2rgeo"
+        if config["adapter"] == "trilogis"
           begin
-            ::ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter.dbconsole(config, @options)
+            ::ActiveRecord::ConnectionAdapters::TrilogisAdapter.dbconsole(config, @options)
           rescue NotImplementedError
             abort "Unknown command-line client for #{db_config.database}."
           end

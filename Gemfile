@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in activerecord-trilogy2rgeo-adapter.gemspec
+# Specify your gem's dependencies in activerecord-trilogis-adapter.gemspec
 gemspec
 
 gem "trilogy"

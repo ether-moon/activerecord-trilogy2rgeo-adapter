@@ -41,8 +41,8 @@ module ActiveRecord
       def spatial_factory
         @spatial_factories ||= {}
 
-        @spatial_factories[@srid] ||= if @srid == ConnectionAdapters::Trilogy2RgeoAdapter::GEOGRAPHIC_SRID
-          RGeo::Geographic.spherical_factory(srid: ConnectionAdapters::Trilogy2RgeoAdapter::GEOGRAPHIC_SRID)
+        @spatial_factories[@srid] ||= if @srid == ConnectionAdapters::TrilogisAdapter::GEOGRAPHIC_SRID
+          RGeo::Geographic.spherical_factory(srid: ConnectionAdapters::TrilogisAdapter::GEOGRAPHIC_SRID)
         else
           RGeo::ActiveRecord::SpatialFactoryStore.instance.factory(
             geo_type: @geo_type,
@@ -96,7 +96,7 @@ module ActiveRecord
           @srid = [@srid].pack("V").unpack("N").first if string[9, 1] == "1"
           RGeo::WKRep::WKBParser.new(spatial_factory, support_ewkb: true, default_srid: @srid).parse(string[8..-1])
         else
-          string, @srid = Arel::Visitors::Trilogy2Rgeo.parse_node(string)
+          string, @srid = Arel::Visitors::Trilogis.parse_node(string)
           RGeo::WKRep::WKTParser.new(spatial_factory, support_ewkt: true, default_srid: @srid).parse(string)
         end
       rescue RGeo::Error::ParseError, RGeo::Error::InvalidGeometry

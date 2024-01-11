@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-require "./lib/active_record/connection_adapters/trilogy2rgeo/version.rb"
+require "./lib/active_record/connection_adapters/trilogis/version.rb"
 
 Gem::Specification.new do |spec|
-  spec.name = "activerecord-trilogy2rgeo-adapter"
+  spec.name = "activerecord-trilogis-adapter"
   spec.summary = "ActiveRecord adapter for MySQL, based on RGeo."
   spec.description =
     "ActiveRecord connection adapter for MySQL. It is based on the stock MySQL adapter, and adds " \
     "built-in support for the spatial extensions provided by MySQL. It uses the RGeo library to represent " \
     "spatial data in Ruby."
 
-  spec.version = ActiveRecord::ConnectionAdapters::Trilogy2Rgeo::VERSION
+  spec.version = ActiveRecord::ConnectionAdapters::Trilogis::VERSION
   spec.author = "Ether Moon"
   spec.email = "ether.moon@kakao.com"
-  spec.homepage = "http://github.com/ether-moon/activerecord-trilogy2rgeo-adapter"
+  spec.homepage = "http://github.com/ether-moon/activerecord-trilogis-adapter"
   spec.license = "BSD-3-Clause"
 
   spec.files = Dir["lib/**/*", "LICENSE.txt"]

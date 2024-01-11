@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# The activerecord-trilogy2rgeo-adapter gem installs the *trilogy2rgeo*
+# The activerecord-trilogis-adapter gem installs the *trilogis*
 # connection adapter into ActiveRecord.
 
 # :stopdoc:
@@ -9,15 +9,15 @@ require "rgeo/active_record"
 
 require "active_record/connection_adapters"
 require "active_record/connection_adapters/trilogy_adapter"
-require "active_record/connection_adapters/trilogy2rgeo/version"
-require "active_record/connection_adapters/trilogy2rgeo/column_methods"
-require "active_record/connection_adapters/trilogy2rgeo/schema_creation"
-require "active_record/connection_adapters/trilogy2rgeo/schema_statements"
-require "active_record/connection_adapters/trilogy2rgeo/spatial_table_definition"
-require "active_record/connection_adapters/trilogy2rgeo/spatial_column"
-require "active_record/connection_adapters/trilogy2rgeo/spatial_column_info"
-require "active_record/connection_adapters/trilogy2rgeo/spatial_expressions"
-require "active_record/connection_adapters/trilogy2rgeo/arel_tosql"
+require "active_record/connection_adapters/trilogis/version"
+require "active_record/connection_adapters/trilogis/column_methods"
+require "active_record/connection_adapters/trilogis/schema_creation"
+require "active_record/connection_adapters/trilogis/schema_statements"
+require "active_record/connection_adapters/trilogis/spatial_table_definition"
+require "active_record/connection_adapters/trilogis/spatial_column"
+require "active_record/connection_adapters/trilogis/spatial_column_info"
+require "active_record/connection_adapters/trilogis/spatial_expressions"
+require "active_record/connection_adapters/trilogis/arel_tosql"
 require "active_record/type/spatial"
 
 # :startdoc:
@@ -25,7 +25,7 @@ require "active_record/type/spatial"
 module ActiveRecord
   module ConnectionHandling # :nodoc:
     # Establishes a connection to the database that's used by all Active Record objects.
-    def trilogy2rgeo_connection(config)
+    def trilogis_connection(config)
       configuration = config.dup
 
       # Set FOUND_ROWS capability on the connection so UPDATE queries returns number of rows
@@ -42,16 +42,16 @@ module ActiveRecord
         0
       ]
 
-      ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter.new nil, logger, options, configuration
+      ActiveRecord::ConnectionAdapters::TrilogisAdapter.new nil, logger, options, configuration
     end
   end
 
   module ConnectionAdapters
-    class Trilogy2RgeoAdapter < TrilogyAdapter
-      ADAPTER_NAME = "Trilogy2Rgeo"
+    class TrilogisAdapter < TrilogyAdapter
+      ADAPTER_NAME = "Trilogis"
       AXIS_ORDER_LONG_LAT = "'axis-order=long-lat'".freeze
 
-      include Trilogy2Rgeo::SchemaStatements
+      include Trilogis::SchemaStatements
 
       SPATIAL_COLUMN_OPTIONS =
         {
@@ -80,7 +80,7 @@ module ActiveRecord
               multilinestring
               multipolygon
             ].each do |geo_type|
-        ActiveRecord::Type.register(geo_type.to_sym, adapter: :trilogy2rgeo) do |sql_type|
+        ActiveRecord::Type.register(geo_type.to_sym, adapter: :trilogis) do |sql_type|
           Type::Spatial.new(sql_type.to_s)
         end
       end
@@ -88,7 +88,7 @@ module ActiveRecord
       def initialize(connection, logger, connection_options, config)
         super
 
-        @visitor = Arel::Visitors::Trilogy2Rgeo.new(self)
+        @visitor = Arel::Visitors::Trilogis.new(self)
       end
 
       def self.spatial_column_options(key)
@@ -131,7 +131,7 @@ module ActiveRecord
               multilinestring
               multipolygon
             ].each do |geo_type|
-              m.register_type(geo_type,Type.lookup(geo_type.to_sym, adapter: :trilogy2rgeo))
+              m.register_type(geo_type,Type.lookup(geo_type.to_sym, adapter: :trilogis))
             end
           end
       end

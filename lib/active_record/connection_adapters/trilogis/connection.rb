@@ -2,14 +2,14 @@
 
 require "trilogy"
 require "active_record/connection_adapters/trilogy_adapter"
-require "active_record/connection_adapters/trilogy2rgeo_adapter"
+require "active_record/connection_adapters/trilogis_adapter"
 
 module ActiveRecord
   module ConnectionAdapters
-    class Trilogy2RgeoAdapter
+    class TrilogisAdapter
       module Connection
         def trilogy_adapter_class
-          ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter
+          ActiveRecord::ConnectionAdapters::TrilogisAdapter
         end
       end
     end

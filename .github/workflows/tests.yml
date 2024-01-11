@@ -10,7 +10,7 @@ jobs:
         ports:
           - 3306:3306
         env:
-          MYSQL_DATABASE: trilogy2rgeo_adapter_test
+          MYSQL_DATABASE: trilogis_adapter_test
           MYSQL_USER: user
           MYSQL_PASSWORD: password
           MYSQL_ROOT_PASSWORD: password
@@ -37,8 +37,8 @@ jobs:
         run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
       - name: Create Database
         run: |
-          mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE IF NOT EXISTS trilogy2rgeo_adapter_test;'
-          mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE IF NOT EXISTS trilogy2rgeo_tasks_test;'
+          mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE IF NOT EXISTS trilogis_adapter_test;'
+          mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE IF NOT EXISTS trilogis_tasks_test;'
       - name: Run Tests
         run: bundle exec rake test
         env:

@@ -2,12 +2,12 @@
 
 module ActiveRecord # :nodoc:
   module ConnectionAdapters # :nodoc:
-    module Trilogy2Rgeo # :nodoc:
+    module Trilogis # :nodoc:
       class TableDefinition < MySQL::TableDefinition # :nodoc:
         include ColumnMethods
         # super: https://github.com/rails/rails/blob/master/activerecord/lib/active_record/connection_adapters/abstract/schema_definitions.rb
         def new_column_definition(name, type, **options)
-          if (info = Trilogy2RgeoAdapter.spatial_column_options(type.to_sym))
+          if (info = TrilogisAdapter.spatial_column_options(type.to_sym))
             if (limit = options.delete(:limit)) && limit.is_a?(::Hash)
               options.merge!(limit)
             end

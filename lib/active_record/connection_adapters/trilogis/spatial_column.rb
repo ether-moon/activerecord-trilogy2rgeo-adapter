@@ -2,7 +2,7 @@
 
 module ActiveRecord # :nodoc:
   module ConnectionAdapters # :nodoc:
-    module Trilogy2Rgeo # :nodoc:
+    module Trilogis # :nodoc:
       class SpatialColumn < ConnectionAdapters::MySQL::Column # :nodoc:
         def initialize(name, default, sql_type_metadata = nil, null = true, default_function = nil, collation: nil, comment: nil, spatial: nil, **)
           @sql_type_metadata = sql_type_metadata

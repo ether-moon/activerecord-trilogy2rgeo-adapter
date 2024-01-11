@@ -14,7 +14,7 @@ class DDLTest < ActiveSupport::TestCase
       point
       polygon
     ].each do |type|
-      assert ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter.spatial_column_options(type), type
+      assert ActiveRecord::ConnectionAdapters::TrilogisAdapter.spatial_column_options(type), type
     end
   end
 
@@ -216,7 +216,7 @@ class DDLTest < ActiveSupport::TestCase
     end
     klass.reset_column_information
     # `all` queries column info from the database - it should not be called when klass.columns is called
-    ActiveRecord::ConnectionAdapters::Trilogy2Rgeo::SpatialColumnInfo.any_instance.expects(:all).never
+    ActiveRecord::ConnectionAdapters::Trilogis::SpatialColumnInfo.any_instance.expects(:all).never
     # first column is id, second is name
     refute klass.columns[1].spatial?
   end

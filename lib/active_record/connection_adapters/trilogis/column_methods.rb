@@ -2,7 +2,7 @@
 
 module ActiveRecord
   module ConnectionAdapters
-    module Trilogy2Rgeo
+    module Trilogis
       module ColumnMethods
         def spatial(name, options = {})
           raise "You must set a type. For example: 't.spatial type: :st_point'" unless options[:type]
@@ -49,6 +49,6 @@ module ActiveRecord
       end
     end
 
-    MySQL::Table.include Trilogy2Rgeo::ColumnMethods
+    MySQL::Table.include Trilogis::ColumnMethods
   end
 end

@@ -5,11 +5,11 @@ if defined?(Rails)
 
   module ActiveRecord
     module ConnectionAdapters
-      class Trilogy2RgeoAdapter
+      class TrilogisAdapter
         class Railtie < ::Rails::Railtie
           ActiveSupport.on_load(:active_record) do
-            require "active_record/connection_adapters/trilogy2rgeo/connection"
-            ActiveRecord::Base.public_send :extend, ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter::Connection
+            require "active_record/connection_adapters/trilogis/connection"
+            ActiveRecord::Base.public_send :extend, ActiveRecord::ConnectionAdapters::TrilogisAdapter::Connection
           end
         end
       end
@@ -19,5 +19,5 @@ end
 
 if defined?(Rails::DBConsole)
   require "trilogy_adapter/rails/dbconsole"
-  Rails::DBConsole.prepend(ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter::Rails::DBConsole)
+  Rails::DBConsole.prepend(ActiveRecord::ConnectionAdapters::TrilogisAdapter::Rails::DBConsole)
 end

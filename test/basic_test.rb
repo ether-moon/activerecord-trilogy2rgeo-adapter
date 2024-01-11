@@ -4,19 +4,19 @@ require "test_helper"
 
 class BasicTest < ActiveSupport::TestCase
   def test_version
-    refute_nil ActiveRecord::ConnectionAdapters::Trilogy2Rgeo::VERSION
+    refute_nil ActiveRecord::ConnectionAdapters::Trilogis::VERSION
   end
 
-  def test_trilogy2rgeo_available
-    assert_equal "Trilogy2Rgeo", SpatialModel.connection.adapter_name
+  def test_trilogis_available
+    assert_equal "Trilogis", SpatialModel.connection.adapter_name
   end
 
   def test_arel_visitor
-    visitor = Arel::Visitors::Trilogy2Rgeo.new(SpatialModel.connection)
+    visitor = Arel::Visitors::Trilogis.new(SpatialModel.connection)
     node = RGeo::ActiveRecord::SpatialConstantNode.new("POINT (1.0 2.0)")
     collector = Arel::Collectors::PlainString.new
     visitor.accept(node, collector)
-    axis_order = ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter::AXIS_ORDER_LONG_LAT
+    axis_order = ActiveRecord::ConnectionAdapters::TrilogisAdapter::AXIS_ORDER_LONG_LAT
     assert_equal "ST_GeomFromText('POINT (1.0 2.0)', #{axis_order})", collector.value
   end
 

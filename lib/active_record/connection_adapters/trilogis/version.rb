@@ -2,7 +2,7 @@
 
 module ActiveRecord
   module ConnectionAdapters
-    module Trilogy2Rgeo
+    module Trilogis
       VERSION = "7.0.0"
     end
   end

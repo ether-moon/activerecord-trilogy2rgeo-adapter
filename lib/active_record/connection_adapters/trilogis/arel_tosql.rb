@@ -2,7 +2,7 @@
 
 module Arel # :nodoc:
   module Visitors # :nodoc:
-    class Trilogy2Rgeo < MySQL # :nodoc:
+    class Trilogis < MySQL # :nodoc:
 
       include RGeo::ActiveRecord::SpatialToSql
 
@@ -21,7 +21,7 @@ module Arel # :nodoc:
       end
 
       def visit_String(node, collector)
-        node, srid = Trilogy2Rgeo.parse_node(node)
+        node, srid = Trilogis.parse_node(node)
         collector << wkttosql_statement(node, srid)
       end
 
@@ -32,7 +32,7 @@ module Arel # :nodoc:
       def visit_in_spatial_context(node, collector)
         case node
         when String
-          node, srid = Trilogy2Rgeo.parse_node(node)
+          node, srid = Trilogis.parse_node(node)
           collector << wkttosql_statement(node, srid)
         when RGeo::Feature::Instance
           collector << visit_RGeo_Feature_Instance(node, collector)
@@ -70,7 +70,7 @@ module Arel # :nodoc:
 
         args = [quote(node)]
         args << srid unless srid.zero?
-        args << ActiveRecord::ConnectionAdapters::Trilogy2RgeoAdapter::AXIS_ORDER_LONG_LAT
+        args << ActiveRecord::ConnectionAdapters::TrilogisAdapter::AXIS_ORDER_LONG_LAT
 
         "#{func_name}(#{args.join(', ')})"
       end
