@@ -18,6 +18,7 @@ require "active_record/connection_adapters/trilogis/spatial_column"
 require "active_record/connection_adapters/trilogis/spatial_column_info"
 require "active_record/connection_adapters/trilogis/spatial_expressions"
 require "active_record/connection_adapters/trilogis/arel_tosql"
+require "active_record/tasks/trilogis_database_tasks"
 require "active_record/type/spatial"
 
 # :startdoc:

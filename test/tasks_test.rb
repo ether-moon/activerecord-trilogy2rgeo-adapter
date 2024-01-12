@@ -10,34 +10,34 @@ class TasksTest < ActiveSupport::TestCase
     assert(sql !~ /CREATE TABLE/)
   end
 
-  # def test_sql_dump
-  #   setup_database_tasks
-  #   connection.create_table(:spatial_test, force: true) do |t|
-  #     t.point "latlon", srid: 4326
-  #     t.geometry "geo_col", srid: 4326
-  #     t.column "poly", :multi_polygon, srid: 4326
-  #   end
-  #   ActiveRecord::Tasks::DatabaseTasks.structure_dump(new_connection, tmp_sql_filename)
-  #   data = File.read(tmp_sql_filename)
-  #   assert_includes data, "`latlon` point"
-  #   assert_includes data, "`geo_col` geometry"
-  #   assert_includes data, "`poly` multipolygon"
-  # end
-  #
-  # def test_index_sql_dump
-  #   setup_database_tasks
-  #   connection.create_table(:spatial_test, force: true) do |t|
-  #     t.point "latlon", null: false, srid: 4326
-  #     t.string "name"
-  #   end
-  #   connection.add_index :spatial_test, :latlon, type: :spatial
-  #   connection.add_index :spatial_test, :name, using: :btree
-  #   ActiveRecord::Tasks::DatabaseTasks.structure_dump(new_connection, tmp_sql_filename)
-  #   data = File.read(tmp_sql_filename)
-  #   assert_includes data, "`latlon` point"
-  #   assert_includes data, "SPATIAL KEY `index_spatial_test_on_latlon` (`latlon`)"
-  #   assert_includes data, "KEY `index_spatial_test_on_name` (`name`) USING BTREE"
-  # end
+  def test_sql_dump
+    setup_database_tasks
+    connection.create_table(:spatial_test, force: true) do |t|
+      t.point "latlon", srid: 4326
+      t.geometry "geo_col", srid: 4326
+      t.column "poly", :multi_polygon, srid: 4326
+    end
+    ActiveRecord::Tasks::DatabaseTasks.structure_dump(new_connection, tmp_sql_filename)
+    data = File.read(tmp_sql_filename)
+    assert_includes data, "`latlon` point"
+    assert_includes data, "`geo_col` geometry"
+    assert_includes data, "`poly` multipolygon"
+  end
+
+  def test_index_sql_dump
+    setup_database_tasks
+    connection.create_table(:spatial_test, force: true) do |t|
+      t.point "latlon", null: false, srid: 4326
+      t.string "name"
+    end
+    connection.add_index :spatial_test, :latlon, type: :spatial
+    connection.add_index :spatial_test, :name, using: :btree
+    ActiveRecord::Tasks::DatabaseTasks.structure_dump(new_connection, tmp_sql_filename)
+    data = File.read(tmp_sql_filename)
+    assert_includes data, "`latlon` point"
+    assert_includes data, "SPATIAL KEY `index_spatial_test_on_latlon` (`latlon`)"
+    assert_includes data, "KEY `index_spatial_test_on_name` (`name`) USING BTREE"
+  end
 
   def test_empty_schema_dump
     setup_database_tasks
