@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.version = ActiveRecord::ConnectionAdapters::Trilogis::VERSION
   spec.author = "Ether Moon"
-  spec.email = "ether.moon@kakao.com"
+  spec.email = "chipseru@gmail.com"
   spec.homepage = "http://github.com/ether-moon/activerecord-trilogis-adapter"
   spec.license = "BSD-3-Clause"
 
