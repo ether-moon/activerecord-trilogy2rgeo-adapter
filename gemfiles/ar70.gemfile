@@ -2,7 +2,8 @@
 
 source "https://rubygems.org"
 
-gem "mysql2", "~> 0.5.2", platform: :ruby
+gem "trilogy"
+gem "activerecord-trilogy-adapter"
 gem "jdbc-mysql", platform: :jruby
 gem "activerecord-jdbc-adapter", "~> 5.0", platform: :jruby
 gem "ffi-geos", platform: :jruby

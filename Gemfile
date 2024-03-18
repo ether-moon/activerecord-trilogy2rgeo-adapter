@@ -10,5 +10,4 @@ gem "activerecord-jdbc-adapter", "~> 5.0", platform: :jruby
 gem "ffi-geos", platform: :jruby
 gem "byebug" if ENV["BYEBUG"]
 
-
 gem "activerecord", "~> 7.0.0"
