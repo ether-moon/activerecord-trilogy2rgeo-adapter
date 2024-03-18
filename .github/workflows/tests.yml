@@ -3,38 +3,35 @@ on: [push, pull_request]
 
 jobs:
   test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:${{matrix.mysql}}
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_DATABASE: trilogis_adapter_test
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: password
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       matrix:
-        rails_version:
-          - "~>6.0.0"
-          - "~>6.1.0"
-          - "~>7.0.0"
-        ruby_version:
-          - '3.0'
-          - '3.1'
-          - '3.2'
-          - '3.3'
-      fail-fast: false
-    runs-on: ubuntu-latest
-    name: Test on Rails ${{ matrix.rails_version }} with Ruby ${{ matrix.ruby_version }}
-    env:
-      RAILS_VERSION: ${{ matrix.rails_version }}
-      DB_HOST: 127.0.0.1
-      DB_PORT: 3306
+        ruby: ['3.3', '3.2', '3.1', '3.0']
+        mysql: ['8.0']
     steps:
-      - uses: actions/checkout@v4
-      - name: Cache .gem files
-        uses: actions/cache@v4
+      - name: Set Up Actions
+        uses: actions/checkout@v2
+      - name: Install GEOS
+        run: sudo apt-get install libgeos-dev
+      - name: Set Up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          key: gems-${{ matrix.rails_version }}-${{ hashFiles('Gemfile', '*.gemspec') }}
-          path: vendor/cache
-      - name: Start mysql
-        run: docker run -d --rm --name=mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=1 -p 3306:3306 --health-interval=1s --health-timeout=5s --health-retries=5  --volume="$(pwd)"/script/setup.sql:/docker-entrypoint-initdb.d/setup.sql  --health-cmd='mysql trilogy_test -e "select * from posts"'  mysql:8.0 --sql_mode=NO_ENGINE_SUBSTITUTION --log-bin --server-id=1 --gtid-mode=ON --enforce-gtid-consistency=ON
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby_version }}
+          ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Wait for mysql
-        run: timeout -v '1m' bash -c 'until [ "`docker inspect -f {{.State.Health.Status}} mysql `" == "healthy" ]; do sleep 0.5; done'
-      - name: Run tests
-        run: bundle exec rake
+      - name: Create Database
+        run: |
+          mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE IF NOT EXISTS trilogis_adapter_test;'
+          mysql -uroot -h127.0.0.1 -ppassword -e 'CREATE DATABASE IF NOT EXISTS trilogis_tasks_test;'
+      - name: Run Tests
+        run: bundle exec rake test
