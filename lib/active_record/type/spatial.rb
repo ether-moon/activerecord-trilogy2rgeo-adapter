@@ -41,15 +41,11 @@ module ActiveRecord
       def spatial_factory
         @spatial_factories ||= {}
 
-        @spatial_factories[@srid] ||= if @srid == ConnectionAdapters::TrilogisAdapter::GEOGRAPHIC_SRID
-          RGeo::Geographic.spherical_factory(srid: ConnectionAdapters::TrilogisAdapter::GEOGRAPHIC_SRID)
-        else
-          RGeo::ActiveRecord::SpatialFactoryStore.instance.factory(
-            geo_type: @geo_type,
-            sql_type: @sql_type,
-            srid: @srid
-          )
-        end
+        @spatial_factories[@srid] ||= RGeo::ActiveRecord::SpatialFactoryStore.instance.factory(
+          geo_type: @geo_type,
+          sql_type: @sql_type,
+          srid: @srid
+        )
       end
 
       def klass
